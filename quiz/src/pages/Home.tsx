@@ -1,10 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 
 const Home: React.FC = () => {
     return (
-        <div>
-            <h1>Page d'accueil</h1>
-            <p>Bienvenue sur la page d'accueil !</p>
+        <div className="text-center">
+            <h1 className="text-3xl text-blue-500">Bienvenue au Quiz !</h1>
         </div>
     );
 };
