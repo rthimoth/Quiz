@@ -1,19 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Button from '../Button';
+import Question from '../Quiz/Question';
 
 const Lobby: React.FC = () => {
     const [username, setUsername] = useState('');
     const [players, setPlayers] = useState<string[]>([]);
     const [lobbyId, setLobbyId] = useState('');
     const [inviteLink, setInviteLink] = useState('');
+    const [isGameStarted, setIsGameStarted] = useState(false);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const navigate = useNavigate();
     const location = useLocation();
 
-    useEffect(() => {
-        const ws = new WebSocket('ws://localhost:8080'); // Connexion au serveur WebSocket
+    const ws = useRef<WebSocket | null>(null); // Use useRef for WebSocket
 
-        ws.onopen = () => {
+    const testQuestions = [
+        { question: "Quelle est la capitale de la France ?", options: ["Paris", "Londres", "Berlin"] },
+        { question: "Quel est le plus grand océan ?", options: ["Atlantique", "Pacifique", "Arctique"] },
+    ];
+
+    useEffect(() => {
+        ws.current = new WebSocket('ws://localhost:8080');
+
+        ws.current.onopen = () => {
             const queryParams = new URLSearchParams(location.search);
             const lobbyIdFromUrl = queryParams.get('lobbyId');
             const storedUsername = localStorage.getItem('username');
@@ -25,15 +35,14 @@ const Lobby: React.FC = () => {
             setUsername(storedUsername || '');
 
             if (!lobbyIdFromUrl) {
-                // Si aucun `lobbyId` n'est fourni, on est l'hôte et on crée un nouveau lobby
-                ws.send(JSON.stringify({ type: 'create', username: storedUsername }));
+                ws.current?.send(JSON.stringify({ type: 'create', username: storedUsername }));
             } else {
                 setLobbyId(lobbyIdFromUrl);
-                ws.send(JSON.stringify({ type: 'join', lobbyId: lobbyIdFromUrl, username: storedUsername }));
+                ws.current?.send(JSON.stringify({ type: 'join', lobbyId: lobbyIdFromUrl, username: storedUsername }));
             }
         };
 
-        ws.onmessage = (event) => {
+        ws.current.onmessage = (event) => {
             const data = JSON.parse(event.data);
 
             if (data.type === 'lobby_created') {
@@ -41,8 +50,8 @@ const Lobby: React.FC = () => {
                 setInviteLink(`${window.location.origin}/lobby?lobbyId=${data.lobbyId}`);
             } else if (data.type === 'joined_lobby') {
                 setPlayers(data.players);
-            } else if (data.type === 'player_joined') {
-                setPlayers((prev) => [...prev, data.username]);
+            } else if (data.type === 'start_game') {
+                setIsGameStarted(true);
             } else if (data.type === 'error') {
                 alert(data.message);
                 navigate('/');
@@ -50,9 +59,23 @@ const Lobby: React.FC = () => {
         };
 
         return () => {
-            ws.close();
+            ws.current?.close();
         };
     }, [location.search, navigate]);
+
+    // Move startGame outside useEffect
+    const startGame = () => {
+        ws.current?.send(JSON.stringify({ type: 'start_game', lobbyId }));
+    };
+
+    const handleAnswer = (answer: string) => {
+        console.log(`Réponse choisie : ${answer}`);
+        if (currentQuestionIndex < testQuestions.length - 1) {
+            setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+        } else {
+            alert("Le quiz est terminé !");
+        }
+    };
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(inviteLink);
@@ -84,6 +107,20 @@ const Lobby: React.FC = () => {
                     <li key={index}>{player}</li>
                 ))}
             </ul>
+
+            {!isGameStarted && (
+                <Button onClick={startGame} className="mt-4 bg-green-500 hover:bg-green-600">
+                    Lancer la Partie
+                </Button>
+            )}
+
+            {isGameStarted && (
+                <Question
+                    question={testQuestions[currentQuestionIndex].question}
+                    options={testQuestions[currentQuestionIndex].options}
+                    onAnswer={handleAnswer}
+                />
+            )}
         </div>
     );
 };

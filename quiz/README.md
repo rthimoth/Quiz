@@ -47,4 +47,8 @@ export default tseslint.config({
     ...react.configs['jsx-runtime'].rules,
   },
 })
+
+npm run dev
+npm run start-server
+
 ```

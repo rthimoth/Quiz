@@ -1,7 +1,6 @@
-import { WebSocketServer } from 'ws'; // Utilise WebSocketServer au lieu de WebSocket
+import { WebSocketServer } from 'ws';
 
 const wss = new WebSocketServer({ port: 8080 });
-
 const lobbies = {}; // Stocker les lobbies par ID
 
 wss.on('connection', (ws) => {
@@ -10,21 +9,42 @@ wss.on('connection', (ws) => {
 
         if (data.type === 'create') {
             const lobbyId = generateLobbyId();
-            lobbies[lobbyId] = { players: [data.username], host: ws };
+            // Crée un lobby avec l’hôte et stocke le pseudo
+            lobbies[lobbyId] = { players: [{ socket: ws, username: data.username }], host: ws };
             ws.send(JSON.stringify({ type: 'lobby_created', lobbyId }));
         } else if (data.type === 'join') {
             const lobby = lobbies[data.lobbyId];
             if (lobby) {
-                lobby.players.push(data.username);
-                lobby.host.send(JSON.stringify({ type: 'player_joined', username: data.username }));
-                ws.send(JSON.stringify({ type: 'joined_lobby', players: lobby.players }));
+                // Ajoute le joueur avec son pseudo
+                lobby.players.push({ socket: ws, username: data.username });
+
+                // Diffuse la mise à jour de la liste des joueurs à tous les clients du lobby
+                lobby.players.forEach((player) => {
+                    player.socket.send(JSON.stringify({
+                        type: 'joined_lobby',
+                        players: lobby.players.map((p) => p.username), // Envoie la liste des pseudos
+                    }));
+                });
             } else {
                 ws.send(JSON.stringify({ type: 'error', message: 'Lobby introuvable' }));
             }
+        } else if (data.type === 'start_game') {
+            const lobby = lobbies[data.lobbyId];
+            if (lobby && ws === lobby.host) {
+                // Diffuser le démarrage du jeu à tous les joueurs du lobby
+                lobby.players.forEach((player) => {
+                    player.socket.send(JSON.stringify({ type: 'start_game' }));
+                });
+            }
         }
+    });
+
+    ws.on('close', () => {
+        // Gérer la déconnexion du joueur (optionnel)
     });
 });
 
+// Génère un identifiant unique pour chaque lobby
 function generateLobbyId() {
     return Math.random().toString(36).substr(2, 9);
 }
