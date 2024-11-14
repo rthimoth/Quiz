@@ -80,10 +80,22 @@ const Lobby: React.FC = () => {
     };
 
     const handleAnswer = (isCorrect: boolean) => {
+        console.log('Réponse donnée, est correcte :', isCorrect);
         if (isCorrect) {
             setScore((prevScore) => prevScore + 1);
         }
 
+        if (currentQuestionIndex < testQuestions.length - 1) {
+            setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+        } else {
+            setIsGameStarted(false);
+            setShowScoreboard(true);
+        }
+    };
+
+    const handleTimeout = () => {
+        console.log('Temps écoulé pour la question', currentQuestionIndex);
+        // Passe à la question suivante sans augmenter le score
         if (currentQuestionIndex < testQuestions.length - 1) {
             setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
         } else {
@@ -140,10 +152,12 @@ const Lobby: React.FC = () => {
                 <>
                     <ScoreBoard score={score} />
                     <Question
+                        key={currentQuestionIndex}
                         question={testQuestions[currentQuestionIndex].question}
                         options={testQuestions[currentQuestionIndex].options}
                         correctAnswer={testQuestions[currentQuestionIndex].correctAnswer}
                         onAnswer={handleAnswer}
+                        onTimeout={handleTimeout}
                     />
                 </>
             )}

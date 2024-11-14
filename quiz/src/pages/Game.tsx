@@ -46,6 +46,16 @@ const Game: React.FC = () => {
         }
     };
 
+    const handleTimeout = () => {
+        // Le joueur n'a pas répondu à temps
+        // Passe à la question suivante sans augmenter le score
+        if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+        } else {
+            setShowScoreboard(true);
+        }
+    };
+
     const resetGame = () => {
         setScore(0);
         setCurrentQuestionIndex(0);
@@ -63,6 +73,7 @@ const Game: React.FC = () => {
                         options={questions[currentQuestionIndex].options}
                         correctAnswer={questions[currentQuestionIndex].correctAnswer}
                         onAnswer={handleAnswer}
+                        onTimeout={handleTimeout} // Ajouté
                     />
                 </>
             ) : (
