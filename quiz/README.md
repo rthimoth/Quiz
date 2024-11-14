@@ -50,5 +50,6 @@ export default tseslint.config({
 
 npm run dev
 npm run start-server
+npm run api
 
 ```
