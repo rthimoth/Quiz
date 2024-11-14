@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Input from '../components/Input';
+import Input from '../components/Pseudo';
 import Logo from '../assets/images/logo.svg';
 import Button from '../components/Button/Button';
 
@@ -24,7 +24,7 @@ const Home: React.FC = () => {
                     <img src={Logo} alt="logo" height={300} width={300} />
                 </div>
                 <div className='flex flex-col justify-center items-center w-2/5'>
-                    <h1 className="text-lg font-bold mb-4 text-center">Choose a name !</h1>
+                    <h1 className="text-lg text-white font-bold mb-4 text-center">Choose a name !</h1>
                     <Input
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}

@@ -8,11 +8,11 @@ interface Props {
     className: string
 }
 
-const BackButton: React.FC<Props> = ({ to, label, className }) => (
+const LinkButton: React.FC<Props> = ({ to, label, className }) => (
   <Link to={to} className={className}>
     <img src={Arrow} alt="arrow" className='rotate-90 mr-2 hover:' />
     {label}
   </Link>
 );
 
-export default BackButton;
+export default LinkButton;

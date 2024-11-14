@@ -14,7 +14,7 @@ const Input: React.FC<InputProps> = ({ value, onChange, placeholder, className }
             value={value}
             onChange={onChange}
             placeholder={placeholder}
-            className={`border border-gray-300 rounded px-4 py-2 w-full ${className}`}
+            className={`bg-white text-purple-500 border-none text-center rounded px-4 py-2 w-full focus:ring-0 focus:shadow-[0_0_5px_2px_rgba(255,255,255,1)] ${className}`}
         />
     );
 };

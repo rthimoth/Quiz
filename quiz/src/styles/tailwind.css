@@ -27,3 +27,17 @@
     font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 0.9rem;
 }
+
+.custom-radio:checked {
+    background-color: white; 
+    border-color: white;
+  }
+  .custom-radio {
+    appearance: none;
+    border: 2px solid white;
+    background-color: transparent;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 9999px;
+    transition: background-color 0.2s;
+  }

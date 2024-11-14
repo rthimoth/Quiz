@@ -24,7 +24,7 @@ const Lobby: React.FC = () => {
                     />
                     <div className='flex'>
                         <PlayerList />
-                        <div className='w-3/5'>
+                        <div className='w-full'>
                             <div className='flex justify-around gap-8'>
                                 <div 
                                     className='bg-black/20 w-full text-center rounded-t-lg cursor-pointer hover:bg-black/10 duration-200'

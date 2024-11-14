@@ -3,8 +3,9 @@ import Chrono from '../../assets/images/chrono.svg';
 import Gamemode from '../../assets/images/gamemode.svg';
 import Numbers from '../../assets/images/numbers.svg';
 import Button from '../Button/Button';
+import { Link } from 'react-router-dom';
 
-const PlayerList: React.FC = () => {
+const Settings: React.FC = () => {
 
     return (
         <div>
@@ -67,13 +68,15 @@ const PlayerList: React.FC = () => {
                     label="SHARE LINK"
                     color="bg-blue-500 hover:bg-blue-400 border-blue-700 hover:border-blue-500"
                 />
-                <Button
-                    label="START"
-                    color="bg-green-500 hover:bg-green-400 border-green-700 hover:border-green-500"
-                />
+                <Link to="/game">                
+                    <Button
+                        label="START"
+                        color="bg-green-500 hover:bg-green-400 border-green-700 hover:border-green-500"
+                    />
+                </Link>
             </div>
         </div>
     );
 };
 
-export default PlayerList;
+export default Settings;
