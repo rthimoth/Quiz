@@ -1,6 +1,6 @@
 import React from 'react';
-import BackButton from '../components/Layout/LinkButton';
-import Button from '../components/Layout/Button';
+import BackButton from '../components/Button/LinkButton';
+import Button from '../components/Button/Button';
 import Timer from '../components/Timer';
 
 
@@ -43,7 +43,7 @@ const Game: React.FC = () => {
                     ))}
                 </div>
                 <Button
-                    label="CHECK"
+                    label="Check"
                     color="bg-blue-500 hover:bg-blue-400 border-blue-700 hover:border-blue-500 mt-8"
                 />
             </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Input from '../components/Input';
 import Logo from '../assets/images/logo.svg';
-import Button from '../components/Layout/Button';
+import Button from '../components/Button/Button';
 
 const Home: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -16,18 +16,6 @@ const Home: React.FC = () => {
     };
 
     return (
-        // <div className="flex flex-col items-center justify-center h-screen w-screen bg-image">
-        //     <img src={Logo} alt="logo" height={150} width={150} />
-        //     <h1 className="text-3xl font-bold mb-4">Choose a name !</h1>
-        //     <Input
-        //         value={username}
-        //         onChange={(e) => setUsername(e.target.value)}
-        //         placeholder="Entrez votre pseudo"
-        //     />
-        //     <Button onClick={handleStart} className="mt-4">
-        //         Commencer
-        //     </Button>
-        // </div>
         <div className='bg-image w-screen h-screen grid grid-cols-3 gap-4'>
             <div>
             </div>
