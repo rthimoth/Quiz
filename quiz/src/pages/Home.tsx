@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Quiz from '../components/Quiz/quiz';
+import Quiz from '../components/Quiz/Quiz';
 
 const Home: React.FC = () => {
     const [TypeQuestion, setTypeQestion] = useState<"QCM"|"Input">("QCM")
