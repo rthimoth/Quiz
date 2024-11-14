@@ -1,65 +1,48 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
-import Input from '../components/Input';
+import { useEffect, useState } from "react";
+import Quiz from '../components/Quiz/quiz';
 
 const Home: React.FC = () => {
-    const [username, setUsername] = useState('');
-    const [gameType, setGameType] = useState<'public' | 'private'>('public');
-    const navigate = useNavigate();
+    const [TypeQuestion, setTypeQestion] = useState<"QCM"|"Input">("QCM")
+    const [Question, setQuestion] = useState<string>("")
+    const [Choices, setChoices] = useState<string[]>([])
+    const [ReponseUser, setResponseUser] = useState<string | null>(null)
 
-    const handleStart = () => {
-        if (username.trim()) {
-            // Stocker le pseudo et le type de partie dans le localStorage
-            localStorage.setItem('username', username);
-            localStorage.setItem('gameType', gameType);
+    useEffect(() => {
+        setQuestion("Pourquoi Thimothée ressemble à Orelsan ?")
+        setChoices(["son visage", "sa coupe", "ses lunettes", "son charisme"])
+    }, [])
 
-            // Rediriger vers le lobby
-            navigate('/lobby');
+    const onCheck = (rep:string) => {
+        setResponseUser(rep)
+    }
+
+    const handleChangeType = () => {
+        if (TypeQuestion === "QCM") {
+            setTypeQestion("Input")
+        } else {
+            setTypeQestion("QCM")
         }
-    };
-
-    return (
-        <div className="flex flex-col items-center justify-center h-screen">
-            <h1 className="text-3xl font-bold mb-4">Bienvenue au Quiz !</h1>
-
-            <Input
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Entrez votre pseudo"
-            />
-
-            <div className="mt-4">
-                <label className="mr-2">Type de Partie :</label>
-                <div className="flex gap-4">
-                    <label className="flex items-center">
-                        <input
-                            type="radio"
-                            value="public"
-                            checked={gameType === 'public'}
-                            onChange={() => setGameType('public')}
-                            className="mr-2"
-                        />
-                        Publique
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                            type="radio"
-                            value="private"
-                            checked={gameType === 'private'}
-                            onChange={() => setGameType('private')}
-                            className="mr-2"
-                        />
-                        Privée
-                    </label>
-                </div>
-            </div>
-
-            <Button onClick={handleStart} className="mt-4">
-                Commencer
-            </Button>
+    }
+    
+    return (<>
+        <div className="flex items-center justify-center">
+            <Quiz Type={TypeQuestion} Question={Question} Choices={Choices} onCheck={onCheck}/>
         </div>
-    );
+        <div className="mt-5">
+            <button onClick={handleChangeType}>
+                {TypeQuestion === "Input" ? (
+                    <p>QCM</p>
+                ):(
+                    <p>Input</p>
+                )}
+            </button>
+        </div>
+        <div className="mt-5">
+            {ReponseUser && (
+                <p>ta reponse est : {ReponseUser}</p>
+            )}
+        </div>
+    </>);
 };
 
 export default Home;
