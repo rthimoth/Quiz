@@ -28,7 +28,7 @@ const Timer: React.FC<Props> = ({ timer }) => {
 
     return (
         <div>
-            <p>{time} s</p>
+            <p className='text-xl'>{time} s</p>
         </div>
     );
 };
