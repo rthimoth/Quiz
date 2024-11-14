@@ -1,7 +1,9 @@
+// Lobby.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Button from '../Button';
 import Question from '../Quiz/Question';
+import ScoreBoard from '../ScoreBoard';
 
 const Lobby: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -10,14 +12,24 @@ const Lobby: React.FC = () => {
     const [inviteLink, setInviteLink] = useState('');
     const [isGameStarted, setIsGameStarted] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [score, setScore] = useState(0);
+    const [showScoreboard, setShowScoreboard] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
-    const ws = useRef<WebSocket | null>(null); // Use useRef for WebSocket
+    const ws = useRef<WebSocket | null>(null);
 
     const testQuestions = [
-        { question: "Quelle est la capitale de la France ?", options: ["Paris", "Londres", "Berlin"] },
-        { question: "Quel est le plus grand océan ?", options: ["Atlantique", "Pacifique", "Arctique"] },
+        {
+            question: "Quelle est la capitale de la France ?",
+            options: ["Paris", "Londres", "Berlin"],
+            correctAnswer: "Paris",
+        },
+        {
+            question: "Quel est le plus grand océan ?",
+            options: ["Atlantique", "Pacifique", "Arctique"],
+            correctAnswer: "Pacifique",
+        },
     ];
 
     useEffect(() => {
@@ -63,23 +75,33 @@ const Lobby: React.FC = () => {
         };
     }, [location.search, navigate]);
 
-    // Move startGame outside useEffect
     const startGame = () => {
         ws.current?.send(JSON.stringify({ type: 'start_game', lobbyId }));
     };
 
-    const handleAnswer = (answer: string) => {
-        console.log(`Réponse choisie : ${answer}`);
+    const handleAnswer = (isCorrect: boolean) => {
+        if (isCorrect) {
+            setScore((prevScore) => prevScore + 1);
+        }
+
         if (currentQuestionIndex < testQuestions.length - 1) {
             setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
         } else {
-            alert("Le quiz est terminé !");
+            setIsGameStarted(false);
+            setShowScoreboard(true);
         }
     };
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(inviteLink);
         alert('Lien d’invitation copié dans le presse-papier !');
+    };
+
+    const resetGame = () => {
+        setScore(0);
+        setCurrentQuestionIndex(0);
+        setShowScoreboard(false);
+        setIsGameStarted(true);
     };
 
     return (
@@ -108,18 +130,32 @@ const Lobby: React.FC = () => {
                 ))}
             </ul>
 
-            {!isGameStarted && (
+            {!isGameStarted && !showScoreboard && (
                 <Button onClick={startGame} className="mt-4 bg-green-500 hover:bg-green-600">
                     Lancer la Partie
                 </Button>
             )}
 
-            {isGameStarted && (
-                <Question
-                    question={testQuestions[currentQuestionIndex].question}
-                    options={testQuestions[currentQuestionIndex].options}
-                    onAnswer={handleAnswer}
-                />
+            {isGameStarted && !showScoreboard && (
+                <>
+                    <ScoreBoard score={score} />
+                    <Question
+                        question={testQuestions[currentQuestionIndex].question}
+                        options={testQuestions[currentQuestionIndex].options}
+                        correctAnswer={testQuestions[currentQuestionIndex].correctAnswer}
+                        onAnswer={handleAnswer}
+                    />
+                </>
+            )}
+
+            {showScoreboard && (
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold mb-4">Le quiz est terminé !</h2>
+                    <ScoreBoard score={score} totalQuestions={testQuestions.length} />
+                    <Button onClick={resetGame} className="mt-4">
+                        Rejouer
+                    </Button>
+                </div>
             )}
         </div>
     );

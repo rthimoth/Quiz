@@ -1,44 +1,79 @@
+// Game.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Question from '../components/Quiz/Question';
+import ScoreBoard from '../components/ScoreBoard';
+import Button from '../components/Button';
 
 const Game: React.FC = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [score, setScore] = useState(0);
+    const [showScoreboard, setShowScoreboard] = useState(false);
     const [questions, setQuestions] = useState([
-        { question: "Quelle est la capitale de la France ?", options: ["Paris", "Londres", "Berlin"] },
-        { question: "Quel est le plus grand océan ?", options: ["Atlantique", "Pacifique", "Arctique"] },
+        {
+            question: "Quelle est la capitale de la France ?",
+            options: ["Paris", "Londres", "Berlin"],
+            correctAnswer: "Paris",
+        },
+        {
+            question: "Quel est le plus grand océan ?",
+            options: ["Atlantique", "Pacifique", "Arctique"],
+            correctAnswer: "Pacifique",
+        },
     ]);
+
     const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Vérifie qu'il y a un `lobbyId` dans l'URL pour sécuriser l'accès
         const queryParams = new URLSearchParams(location.search);
         const lobbyId = queryParams.get('lobbyId');
 
         if (!lobbyId) {
-            navigate('/'); // Redirige vers l'accueil si aucun `lobbyId` n'est trouvé
+            navigate('/');
         }
     }, [location, navigate]);
 
-    const handleAnswer = (answer: string) => {
-        console.log(`Réponse sélectionnée : ${answer}`);
+    const handleAnswer = (isCorrect: boolean) => {
+        if (isCorrect) {
+            setScore((prevScore) => prevScore + 1);
+        }
+
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
         } else {
-            alert("Le quiz est terminé !");
-            navigate('/'); // Redirige vers l'accueil une fois le quiz terminé
+            setShowScoreboard(true);
         }
+    };
+
+    const resetGame = () => {
+        setScore(0);
+        setCurrentQuestionIndex(0);
+        setShowScoreboard(false);
     };
 
     return (
         <div className="flex flex-col items-center justify-center h-screen">
-            <h1 className="text-2xl font-bold mb-4">Quiz en cours</h1>
-            <Question
-                question={questions[currentQuestionIndex].question}
-                options={questions[currentQuestionIndex].options}
-                onAnswer={handleAnswer}
-            />
+            {!showScoreboard ? (
+                <>
+                    <h1 className="text-2xl font-bold mb-4">Quiz en cours</h1>
+                    <ScoreBoard score={score} />
+                    <Question
+                        question={questions[currentQuestionIndex].question}
+                        options={questions[currentQuestionIndex].options}
+                        correctAnswer={questions[currentQuestionIndex].correctAnswer}
+                        onAnswer={handleAnswer}
+                    />
+                </>
+            ) : (
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold mb-4">Le quiz est terminé !</h2>
+                    <ScoreBoard score={score} totalQuestions={questions.length} />
+                    <Button onClick={resetGame} className="mt-4">
+                        Rejouer
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };
