@@ -3,13 +3,14 @@ import QcmButton from './QcmButton';
 import InputQuiz from './InputQuiz';
 
 interface QuizProps {
+    Theme: string,
     Type:"QCM"|"Input";
     Question:string;
     Choices:string[]|null;
     onCheck:(AnswerUser:string) => void;
 }
 
-const Quiz: React.FC<QuizProps> = ({ Type, Question, Choices, onCheck }) => {
+const Quiz: React.FC<QuizProps> = ({ Theme, Type, Question, Choices, onCheck }) => {
 
     const [AnswerUser, setAnswerUser] = useState<string | null>(null)
 
@@ -29,7 +30,7 @@ const Quiz: React.FC<QuizProps> = ({ Type, Question, Choices, onCheck }) => {
 
 
     return <div className='text-center'>
-        <p className='text-4xl front-bold mb-4'>{Type}</p>
+        <p className='text-4xl front-bold mb-4'>{Theme}</p>
         <p className='text-2xl'>{Question}</p>
         {Type === "QCM" && (
             <div className='mt-10'>

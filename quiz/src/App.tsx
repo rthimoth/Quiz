@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Lobby from './components/Lobby/Lobby';
 import Join from './pages/Join';
 import Game from './pages/Game';
+import Test from './pages/Test';
 // import { WebSocketProvider } from './context/WebSocketContext';
 // import Result from './pages/Result';
 
@@ -15,6 +16,7 @@ const App: React.FC = () => {
                 <Route path="/lobby" element={<Lobby />} />
                 <Route path="/join" element={<Join />} />
                 <Route path="/game" element={<Game />} />
+                <Route path="/test" element={<Test />} />
                 {/*<Route path="/result" element={<Result />} />*/}
             </Routes>
         </Router>
