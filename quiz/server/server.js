@@ -44,8 +44,8 @@ wss.on('connection', (ws) => {
         // Gérer la déconnexion du joueur (optionnel)
     });
 });
-
 // Génère un identifiant unique pour chaque lobby
 function generateLobbyId() {
     return Math.random().toString(36).substr(2, 9);
 }
+

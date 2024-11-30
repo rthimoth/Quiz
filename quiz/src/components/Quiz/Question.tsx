@@ -1,5 +1,6 @@
 // Question.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import Timer from '../Timer';
 
 interface QuestionProps {
     question: string;
@@ -7,36 +8,18 @@ interface QuestionProps {
     correctAnswer: string;
     onAnswer: (isCorrect: boolean) => void;
     onTimeout: () => void;
+    timeLimit?: number; // Prop optionnelle pour définir le temps
 }
 
-const Question: React.FC<QuestionProps> = ({ question, options, correctAnswer, onAnswer, onTimeout }) => {
+const Question: React.FC<QuestionProps> = ({
+    question,
+    options,
+    correctAnswer,
+    onAnswer,
+    onTimeout,
+    timeLimit = 10, // Valeur par défaut de 10 secondes
+}) => {
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
-    const [timeLeft, setTimeLeft] = useState<number>(10);
-
-    useEffect(() => {
-        setSelectedOption(null);
-        setTimeLeft(10);
-
-        const timer = setInterval(() => {
-            setTimeLeft((prevTime) => {
-                if (prevTime <= 1) {
-                    clearInterval(timer);
-                    return 0;
-                }
-                return prevTime - 1;
-            });
-        }, 1000);
-
-        return () => {
-            clearInterval(timer);
-        };
-    }, [question]);
-
-    useEffect(() => {
-        if (timeLeft === 0 && selectedOption === null) {
-            onTimeout();
-        }
-    }, [timeLeft, selectedOption, onTimeout]);
 
     const handleOptionClick = (option: string) => {
         if (!selectedOption) {
@@ -46,11 +29,15 @@ const Question: React.FC<QuestionProps> = ({ question, options, correctAnswer, o
         }
     };
 
+    const handleTimeout = () => {
+        if (!selectedOption) {
+            onTimeout();
+        }
+    };
+
     return (
         <div className="mt-4">
-            <div className="text-center mb-2">
-                <h2 className="text-lg font-semibold">Temps restant : {timeLeft} secondes</h2>
-            </div>
+            <Timer initialTime={timeLimit} onExpire={handleTimeout} />
             <h2 className="text-xl font-semibold mb-2">{question}</h2>
             <ul>
                 {options.map((option, index) => {
@@ -60,9 +47,9 @@ const Question: React.FC<QuestionProps> = ({ question, options, correctAnswer, o
                         if (option === correctAnswer) {
                             buttonClass = 'bg-green-500 text-white'; // Affiche en vert la bonne réponse
                         } else if (option === selectedOption) {
-                            buttonClass = 'bg-red-500 text-white';   // Affiche en rouge la mauvaise réponse sélectionnée
+                            buttonClass = 'bg-red-500 text-white'; // Affiche en rouge la mauvaise réponse sélectionnée
                         } else {
-                            buttonClass = 'bg-gray-500 text-white';  // Grise les autres options
+                            buttonClass = 'bg-gray-500 text-white'; // Grise les autres options
                         }
                     }
 

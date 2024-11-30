@@ -116,40 +116,52 @@ const Lobby: React.FC = () => {
         setIsGameStarted(true);
     };
 
+    const goToHome = () => {
+        // Optionnel : Réinitialiser les états si nécessaire
+        setScore(0);
+        setCurrentQuestionIndex(0);
+        setShowScoreboard(false);
+        setIsGameStarted(false);
+        navigate('/');
+    };
+
     return (
         <div className="flex flex-col items-center justify-center h-screen">
-            <h1 className="text-2xl font-bold mb-4">Bienvenue dans le lobby, {username} !</h1>
-
-            {lobbyId && (
-                <>
-                    <p className="mb-4">Lien d'invitation :</p>
-                    <div className="flex items-center">
-                        <input
-                            type="text"
-                            value={inviteLink}
-                            readOnly
-                            className="border border-gray-300 rounded px-2 py-1 mr-2 w-64"
-                        />
-                        <Button onClick={handleCopyLink}>Copier le lien</Button>
-                    </div>
-                </>
-            )}
-
-            <h2 className="text-xl font-semibold mt-6">Joueurs dans le lobby :</h2>
-            <ul className="list-disc mt-2">
-                {players.map((player, index) => (
-                    <li key={index}>{player}</li>
-                ))}
-            </ul>
-
             {!isGameStarted && !showScoreboard && (
-                <Button onClick={startGame} className="mt-4 bg-green-500 hover:bg-green-600">
-                    Lancer la Partie
-                </Button>
+                <>
+                    <h1 className="text-2xl font-bold mb-4">Bienvenue dans le lobby, {username} !</h1>
+
+                    {lobbyId && (
+                        <>
+                            <p className="mb-4">Lien d'invitation :</p>
+                            <div className="flex items-center">
+                                <input
+                                    type="text"
+                                    value={inviteLink}
+                                    readOnly
+                                    className="border border-gray-300 rounded px-2 py-1 mr-2 w-64"
+                                />
+                                <Button onClick={handleCopyLink}>Copier le lien</Button>
+                            </div>
+                        </>
+                    )}
+
+                    <h2 className="text-xl font-semibold mt-6">Joueurs dans le lobby :</h2>
+                    <ul className="list-disc mt-2">
+                        {players.map((player, index) => (
+                            <li key={index}>{player}</li>
+                        ))}
+                    </ul>
+
+                    <Button onClick={startGame} className="mt-4 bg-green-500 hover:bg-green-600">
+                        Lancer la Partie
+                    </Button>
+                </>
             )}
 
             {isGameStarted && !showScoreboard && (
                 <>
+                    <h1 className="text-2xl font-bold mb-4">Quiz en cours</h1>
                     <ScoreBoard score={score} />
                     <Question
                         key={currentQuestionIndex}
@@ -166,9 +178,14 @@ const Lobby: React.FC = () => {
                 <div className="text-center">
                     <h2 className="text-2xl font-bold mb-4">Le quiz est terminé !</h2>
                     <ScoreBoard score={score} totalQuestions={testQuestions.length} />
-                    <Button onClick={resetGame} className="mt-4">
-                        Rejouer
-                    </Button>
+                    <div className="flex flex-col items-center mt-4">
+                        <Button onClick={resetGame} className="mb-2">
+                            Rejouer
+                        </Button>
+                        <Button onClick={goToHome} className="bg-blue-500 hover:bg-blue-600">
+                            Retour à l'accueil
+                        </Button>
+                    </div>
                 </div>
             )}
         </div>
