@@ -69,7 +69,6 @@ const Game: React.FC = () => {
                 />
             </div>
             <div className="flex justify-end w-full p-16">
-                <p>Numbers: {numbers}</p>
                 <Timer timer={timer} />
             </div>
 
@@ -79,7 +78,6 @@ const Game: React.FC = () => {
                         question={currentQuestion.questionText}
                         correctAnswer={currentQuestion.answer as string}
                         onAnswerSubmit={handleAnswerSubmit}
-                        timer={timer}
                     />
                 ) : currentQuestion.type === 'Choices' ? (
                     <MultipleChoice
@@ -87,7 +85,6 @@ const Game: React.FC = () => {
                         answers={currentQuestion.answer as string[]}
                         correctAnswer={currentQuestion.answer[0]}
                         onAnswerSubmit={handleAnswerSubmit}
-                        timer={timer}
                     />
                 ) : null
             ) : (
@@ -103,6 +100,9 @@ const Game: React.FC = () => {
                     <p>{isCorrect ? 'Correct!' : 'Incorrect!'}</p>
                 </div>
             )}
+            <div className="flex justify-end w-full p-16">
+                <p>{currentQuestionIndex + 1}/{numbers}</p>
+            </div>
         </div>
     );
 };

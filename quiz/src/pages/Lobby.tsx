@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Logo from '../assets/images/logo.svg';
 import LinkButton from '../components/Button/LinkButton';
 import PlayerList from '../components/Lobby/PlayerList';
@@ -53,7 +54,29 @@ const Lobby: React.FC = () => {
     };
 
     const handleStartGame = () => {
-        navigate('/game', { state: { questions, chrono, numbers } });
+        if (gamemode === 'public') {
+            axios.get(`http://localhost:20904/question/random/${numbers}`)
+                .then((response) => {
+                    const apiQuestions = response.data;
+                    console.log(apiQuestions.data);
+                    // navigate('/game', { state: { questions: apiQuestions, chrono, numbers } });
+                })
+                .catch((error) => {
+                    console.error('Error fetching questions:', error);
+                    alert('Failed to fetch questions. Please try again.');
+                });
+            return;
+        } else {
+            if (questions.some((question) => question.questionText === '')) {
+                alert('Please fill all questions');
+                return;
+            }
+            if (questions.some((question) => question.type === 'Choices' && (question.answer as string[]).some((answer) => answer === ''))) {
+                alert('Please fill all answers');
+                return;
+            }
+            navigate('/game', { state: { questions, chrono, numbers } });
+        }
     };
 
     const handleNext = () => {
@@ -95,16 +118,18 @@ const Lobby: React.FC = () => {
                                 >
                                     <p>SETTINGS</p>
                                 </div>
+                            {gamemode === 'private' && (
                                 <div
-                                    className={`w-full text-center rounded-t-lg cursor-pointer duration-200 ${
-                                        tabs === 'Questions'
-                                            ? 'bg-black/20 hover:bg-black/10'
-                                            : 'bg-black/10 hover:bg-black/20'
-                                    }`}
-                                    onClick={() => setTabs('Questions')}
+                                className={`w-full text-center rounded-t-lg cursor-pointer duration-200 ${
+                                    tabs === 'Questions'
+                                        ? 'bg-black/20 hover:bg-black/10'
+                                        : 'bg-black/10 hover:bg-black/20'
+                                }`}
+                                onClick={() => setTabs('Questions')}
                                 >
                                     <p>QUESTIONS</p>
                                 </div>
+                            )}
                             </div>
                             <div className='bg-black/20 rounded-b-xl flex flex-col items-end p-2'>
                                 {tabs === 'Settings' ? (

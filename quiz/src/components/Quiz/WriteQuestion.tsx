@@ -5,10 +5,9 @@ interface Props {
     question: string;
     correctAnswer: string;
     onAnswerSubmit: (isCorrect: boolean) => void;
-    timer: number;
 }
 
-const WriteQuestion: React.FC<Props> = ({ question, correctAnswer, onAnswerSubmit, timer }) => {
+const WriteQuestion: React.FC<Props> = ({ question, correctAnswer, onAnswerSubmit }) => {
     const [userAnswer, setUserAnswer] = useState<string>('');
     const [isAnswered, setIsAnswered] = useState<boolean>(false);
 
@@ -34,7 +33,6 @@ const WriteQuestion: React.FC<Props> = ({ question, correctAnswer, onAnswerSubmi
                 onChange={(e) => !isAnswered && setUserAnswer(e.target.value)}
             />
             <div className="mt-8">
-                <p>Time Remaining: {timer}s</p>
                 {!isAnswered && (
                     <SubmitButton
                         label="Submit"

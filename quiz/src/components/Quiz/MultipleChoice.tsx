@@ -6,10 +6,9 @@ interface Props {
     answers: string[];
     correctAnswer: string;
     onAnswerSubmit: (isCorrect: boolean) => void;
-    timer: number;
 }
 
-const MultipleChoice: React.FC<Props> = ({ question, answers, correctAnswer, onAnswerSubmit, timer }) => {
+const MultipleChoice: React.FC<Props> = ({ question, answers, correctAnswer, onAnswerSubmit }) => {
     const [selectedAnswer, setSelectedAnswer] = useState<string>('');
     const [isAnswered, setIsAnswered] = useState<boolean>(false);
 
@@ -38,7 +37,6 @@ const MultipleChoice: React.FC<Props> = ({ question, answers, correctAnswer, onA
                 ))}
             </div>
             <div className="mt-8">
-                <p>Time Remaining: {timer}s</p>
                 {!isAnswered && (
                     <SubmitButton
                         label="Submit"
