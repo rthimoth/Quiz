@@ -19,6 +19,10 @@ const Home: React.FC = () => {
         }
     };
 
+    const handleTest = () => {
+        navigate('/test');
+    };
+
     return (
         <div className="flex flex-col items-center justify-center h-screen">
             <h1 className="text-3xl font-bold mb-4">Bienvenue au Quiz !</h1>
@@ -57,6 +61,9 @@ const Home: React.FC = () => {
 
             <Button onClick={handleStart} className="mt-4">
                 Commencer
+            </Button>
+            <Button onClick={handleTest} className="mt-4">
+                test
             </Button>
         </div>
     );

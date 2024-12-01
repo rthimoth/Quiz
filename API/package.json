@@ -1,0 +1,20 @@
+{
+  "name": "quizapi",
+  "version": "0.0.0",
+  "description": "Api de Quiz",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "api": "node src/index.js"
+  },
+  "author": "erwan sinck",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongoose": "^8.8.3"
+  }
+}
