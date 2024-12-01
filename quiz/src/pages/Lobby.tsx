@@ -9,13 +9,19 @@ import { useNavigate } from 'react-router-dom';
 
 interface Question {
     type: string;
-    questionText: string;
+    question: string;
     answer: string | string[];
+    choices?: string[];
 }
 
 const Lobby: React.FC = () => {
     const [tabs, setTabs] = useState('Settings');
-    const [questions, setQuestions] = useState<Question[]>([]);
+    const [questions, setQuestions] = useState<Question[]>([{
+        type: 'Input',
+        question: '',
+        answer: '',
+        choices: ['', '', '', ''],
+    }]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [chrono, setChrono] = useState(30);
     const [gamemode, setGamemode] = useState('private');
@@ -27,9 +33,10 @@ const Lobby: React.FC = () => {
             setQuestions((prev) => [
                 ...prev,
                 ...Array(newNumbers - prev.length).fill({
-                    type: 'Write',
-                    questionText: '',
+                    type: 'Input',
+                    question: '',
                     answer: '',
+                    choices: ['', '', '', ''],
                 }),
             ]);
         } else if (newNumbers < questions.length) {
@@ -46,9 +53,17 @@ const Lobby: React.FC = () => {
     const updateCurrentQuestion = (key: keyof Question, value: string | string[]) => {
         const updatedQuestions = [...questions];
         const updatedQuestion = { ...updatedQuestions[currentIndex], [key]: value };
+
         if (key === 'type') {
-            updatedQuestion.answer = value === 'Choices' ? ['', '', '', ''] : '';
+            if (value === 'Choices') {
+                updatedQuestion.answer = '';
+                updatedQuestion.choices = updatedQuestion.choices || ['', '', '', ''];
+            } else if (value === 'Input') {
+                updatedQuestion.answer = '';
+                delete updatedQuestion.choices;
+            }
         }
+
         updatedQuestions[currentIndex] = updatedQuestion;
         setQuestions(updatedQuestions);
     };
@@ -57,9 +72,18 @@ const Lobby: React.FC = () => {
         if (gamemode === 'public') {
             axios.get(`http://localhost:20904/question/random/${numbers}`)
                 .then((response) => {
-                    const apiQuestions = response.data;
-                    console.log(apiQuestions.data);
-                    // navigate('/game', { state: { questions: apiQuestions, chrono, numbers } });
+                    const apiQuestions = response.data.data;
+    
+                    const transformedQuestions = apiQuestions.map((apiQuestion: { type: string; question: string; answer: string; choices?: string[] }) => ({
+                        type: apiQuestion.type, 
+                        question: apiQuestion.question,
+                        answer: apiQuestion.answer,
+                        choices: apiQuestion.choices,
+                    }));
+    
+                    console.log('Transformed API questions:', transformedQuestions);
+    
+                    navigate('/game', { state: { questions: transformedQuestions, chrono, numbers } });
                 })
                 .catch((error) => {
                     console.error('Error fetching questions:', error);
@@ -67,17 +91,19 @@ const Lobby: React.FC = () => {
                 });
             return;
         } else {
-            if (questions.some((question) => question.questionText === '')) {
+            if (questions.some((question) => question.question === '')) {
                 alert('Please fill all questions');
                 return;
             }
-            if (questions.some((question) => question.type === 'Choices' && (question.answer as string[]).some((answer) => answer === ''))) {
+            if (questions.some((question) => question.type === 'Choices' && (question.choices?.some((choice) => choice === '')))) {
                 alert('Please fill all answers');
                 return;
             }
+            console.log('Questions:', questions);
             navigate('/game', { state: { questions, chrono, numbers } });
         }
     };
+    
 
     const handleNext = () => {
         if (currentIndex < numbers - 1) {
@@ -109,27 +135,19 @@ const Lobby: React.FC = () => {
                         <div className='w-full'>
                             <div className='flex justify-around gap-8'>
                                 <div
-                                    className={`w-full text-center rounded-t-lg cursor-pointer duration-200 ${
-                                        tabs === 'Settings'
-                                            ? 'bg-black/20 hover:bg-black/10'
-                                            : 'bg-black/10 hover:bg-black/20'
-                                    }`}
+                                    className={`w-full text-center rounded-t-lg cursor-pointer duration-200 ${tabs === 'Settings' ? 'bg-black/20 hover:bg-black/10' : 'bg-black/10 hover:bg-black/20'}`}
                                     onClick={() => setTabs('Settings')}
                                 >
                                     <p>SETTINGS</p>
                                 </div>
-                            {gamemode === 'private' && (
-                                <div
-                                className={`w-full text-center rounded-t-lg cursor-pointer duration-200 ${
-                                    tabs === 'Questions'
-                                        ? 'bg-black/20 hover:bg-black/10'
-                                        : 'bg-black/10 hover:bg-black/20'
-                                }`}
-                                onClick={() => setTabs('Questions')}
-                                >
-                                    <p>QUESTIONS</p>
-                                </div>
-                            )}
+                                {gamemode === 'private' && (
+                                    <div
+                                        className={`w-full text-center rounded-t-lg cursor-pointer duration-200 ${tabs === 'Questions' ? 'bg-black/20 hover:bg-black/10' : 'bg-black/10 hover:bg-black/20'}`}
+                                        onClick={() => setTabs('Questions')}
+                                    >
+                                        <p>QUESTIONS</p>
+                                    </div>
+                                )}
                             </div>
                             <div className='bg-black/20 rounded-b-xl flex flex-col items-end p-2'>
                                 {tabs === 'Settings' ? (
@@ -142,7 +160,7 @@ const Lobby: React.FC = () => {
                                         setNumbers={handleNumbersChange}
                                         onStartGame={handleStartGame}
                                     />
-                                ) : tabs === 'Questions' ? (
+                                ) : tabs === 'Questions' && questions[currentIndex] ? (
                                     <Questions
                                         questions={questions}
                                         currentIndex={currentIndex}

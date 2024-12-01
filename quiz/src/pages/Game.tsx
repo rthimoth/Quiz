@@ -73,17 +73,17 @@ const Game: React.FC = () => {
             </div>
 
             {gameStarted ? (
-                currentQuestion.type === 'Write' ? (
+                currentQuestion.type === 'Input' ? (
                     <WriteQuestion
-                        question={currentQuestion.questionText}
-                        correctAnswer={currentQuestion.answer as string}
+                        question={currentQuestion.question}
+                        correctAnswer={currentQuestion.answer}
                         onAnswerSubmit={handleAnswerSubmit}
                     />
-                ) : currentQuestion.type === 'Choices' ? (
+                ) : currentQuestion.type === 'QCM' ? (
                     <MultipleChoice
-                        question={currentQuestion.questionText}
-                        answers={currentQuestion.answer as string[]}
-                        correctAnswer={currentQuestion.answer[0]}
+                        question={currentQuestion.question}
+                        answers={currentQuestion.choices || []}
+                        correctAnswer={currentQuestion.answer}
                         onAnswerSubmit={handleAnswerSubmit}
                     />
                 ) : null

@@ -1,29 +1,27 @@
 import React from 'react';
 import Radio from '../Button/Radio';
 
-interface Props {
+interface ChoicesProps {
     answers: string[];
-    updateAnswers: (newAnswers: string[]) => void;
+    selectedAnswer: string;
+    onChoiceChange: (selectedChoice: string) => void;
+    onChoiceTextChange: (index: number, newText: string) => void;
 }
 
-const Choices: React.FC<Props> = ({ answers = ['', '', '', ''], updateAnswers }) => {
-    const handleAnswerChange = (index: number, value: string) => {
-        const updatedAnswers = [...answers];
-        updatedAnswers[index] = value;
-        updateAnswers(updatedAnswers);
-    };
-
+const Choices: React.FC<ChoicesProps> = ({ answers, selectedAnswer, onChoiceChange, onChoiceTextChange }) => {
     return (
-        <>
+        <div className="w-full">
             {answers.map((answer, index) => (
                 <Radio
                     key={index}
-                    label={`Answer ${index + 1}`}
+                    label={answer}
                     value={answer}
-                    onChange={(value) => handleAnswerChange(index, value)}
+                    selectedValue={selectedAnswer}
+                    onChange={onChoiceChange}
+                    onTextChange={(newText) => onChoiceTextChange(index, newText)}
                 />
             ))}
-        </>
+        </div>
     );
 };
 
