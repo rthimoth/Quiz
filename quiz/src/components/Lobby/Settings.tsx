@@ -1,12 +1,20 @@
-import React, { } from 'react';
+import React from 'react';
 import Chrono from '../../assets/images/chrono.svg';
 import Gamemode from '../../assets/images/gamemode.svg';
 import Numbers from '../../assets/images/numbers.svg';
 import Button from '../Button/Button';
 import { Link } from 'react-router-dom';
 
-const Settings: React.FC = () => {
+interface SettingsProps {
+    chrono: string;
+    setChrono: (value: string) => void;
+    gamemode: string;
+    setGamemode: (value: string) => void;
+    numbers: number;
+    setNumbers: (value: number) => void;
+}
 
+const Settings: React.FC<SettingsProps> = ({ chrono, setChrono, gamemode, setGamemode, numbers, setNumbers }) => {
     return (
         <div>
             <div>
@@ -19,7 +27,14 @@ const Settings: React.FC = () => {
                         </div>
                     </div>
                     <div className='w-1/2'>
-                        <select title="chrono" name="chrono" id="chrono" className='block w-full p-2 text-sm text-white border-none rounded-lg bg-black/50 w-full'>
+                        <select
+                            title="chrono"
+                            name="chrono"
+                            id="chrono"
+                            className='block w-full p-2 text-sm text-white border-none rounded-lg bg-black/50 w-full'
+                            value={chrono}
+                            onChange={(e) => setChrono(e.target.value)}
+                        >
                             <option value="15s">15 seconds</option>
                             <option value="30s">30 seconds</option>
                             <option value="45s">45 seconds</option>
@@ -31,14 +46,21 @@ const Settings: React.FC = () => {
                 </div>
                 <div className='flex items-center m-4'>
                     <div className='flex w-1/2 mx-4'>
-                    <img src={Gamemode} alt="gamemode" className='mr-2' />
+                        <img src={Gamemode} alt="gamemode" className='mr-2' />
                         <div>
                             <p>GAMEMODE</p>
                             <p className='font-normal'>Choose the gamemode to create your questions or take the public questions</p>
                         </div>
                     </div>
                     <div className='w-1/2'>
-                        <select title="gamemode" name="gamemode" id="gamemode" className='block w-full p-2 text-sm text-white border-none rounded-lg bg-black/50 w-full'>
+                        <select
+                            title="gamemode"
+                            name="gamemode"
+                            id="gamemode"
+                            className='block w-full p-2 text-sm text-white border-none rounded-lg bg-black/50 w-full'
+                            value={gamemode}
+                            onChange={(e) => setGamemode(e.target.value)}
+                        >
                             <option value="public">Public</option>
                             <option value="private">Private</option>
                         </select>
@@ -53,7 +75,15 @@ const Settings: React.FC = () => {
                         </div>
                     </div>
                     <div className='w-1/2'>
-                        <select title="numbers" name="numbers" id="numbers" className='block w-full p-2 text-sm text-white border-none rounded-lg bg-black/50 w-full'>
+                        <select
+                            title="numbers"
+                            name="numbers"
+                            id="numbers"
+                            className='block w-full p-2 text-sm text-white border-none rounded-lg bg-black/50 w-full'
+                            value={numbers}
+                            onChange={(e) => setNumbers(Number(e.target.value))}
+                        >
+                            <option value="1">1</option>
                             <option value="5">5</option>
                             <option value="10">10</option>
                             <option value="15">15</option>

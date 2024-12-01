@@ -31,8 +31,9 @@
 .custom-radio:checked {
     background-color: white; 
     border-color: white;
-  }
-  .custom-radio {
+}
+
+.custom-radio {
     appearance: none;
     border: 2px solid white;
     background-color: transparent;
@@ -40,4 +41,34 @@
     height: 1.25rem;
     border-radius: 9999px;
     transition: background-color 0.2s;
-  }
+}
+
+.player-list {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.player-list::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    border-radius: 30px;
+}
+
+.player-list::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+}
+
+.player-list::-webkit-scrollbar-thumb {
+    background: #8b5cf6;
+    border-radius: 10px;
+}
+
+.player-list::-webkit-scrollbar-thumb:hover {
+    background: #7c3aed;
+}
+
+.player-list {
+    scrollbar-width: thin;
+    scrollbar-color: #8b5cf6 transparent;
+}

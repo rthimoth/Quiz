@@ -38,10 +38,6 @@ const Home: React.FC = () => {
                     </span>
                     <div className='flex flex-col justify-center items-center w-full'>
                         <Button
-                            label="Public game"
-                            color="bg-blue-500 hover:bg-blue-400 border-blue-700 hover:border-blue-500 mt-8 w-4/5"
-                        />
-                        <Button
                             label="Create a private game"
                             color="bg-slate-100 hover:bg-slate-200 border-slate-400 hover:border-slate-300 mt-8 w-4/5 text-black"
                         />
