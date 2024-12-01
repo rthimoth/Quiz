@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Lobby from './pages/Lobby';
 import Game from './pages/Game';
-// import Result from './pages/Result';
+import Result from './pages/Result';
 
 const App: React.FC = () => {
     return (
@@ -12,7 +12,7 @@ const App: React.FC = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/lobby" element={<Lobby />} />
                 <Route path="/game" element={<Game />} />
-                {/*<Route path="/result" element={<Result />} />*/}
+                <Route path="/result" element={<Result />} />
             </Routes>
         </Router>
     );

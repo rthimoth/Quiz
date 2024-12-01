@@ -4,6 +4,7 @@ import LinkButton from '../components/Button/LinkButton';
 import PlayerList from '../components/Lobby/PlayerList';
 import Settings from '../components/Lobby/Settings';
 import Questions from '../components/Lobby/Questions';
+import { useNavigate } from 'react-router-dom';
 
 interface Question {
     type: string;
@@ -13,15 +14,12 @@ interface Question {
 
 const Lobby: React.FC = () => {
     const [tabs, setTabs] = useState('Settings');
-
-    const [questions, setQuestions] = useState<Question[]>([
-        { type: 'Write', questionText: '', answer: '' },
-    ]);
+    const [questions, setQuestions] = useState<Question[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-
-    const [chrono, setChrono] = useState('15s');
+    const [chrono, setChrono] = useState(30);
     const [gamemode, setGamemode] = useState('private');
     const [numbers, setNumbers] = useState(1);
+    const navigate = useNavigate();
 
     const adjustQuestionsArray = (newNumbers: number) => {
         if (newNumbers > questions.length) {
@@ -47,14 +45,15 @@ const Lobby: React.FC = () => {
     const updateCurrentQuestion = (key: keyof Question, value: string | string[]) => {
         const updatedQuestions = [...questions];
         const updatedQuestion = { ...updatedQuestions[currentIndex], [key]: value };
-
         if (key === 'type') {
-            updatedQuestion.answer =
-                value === 'Choices' ? ['', '', '', ''] : '';
+            updatedQuestion.answer = value === 'Choices' ? ['', '', '', ''] : '';
         }
-
         updatedQuestions[currentIndex] = updatedQuestion;
         setQuestions(updatedQuestions);
+    };
+
+    const handleStartGame = () => {
+        navigate('/game', { state: { questions, chrono, numbers } });
     };
 
     const handleNext = () => {
@@ -116,6 +115,7 @@ const Lobby: React.FC = () => {
                                         setGamemode={setGamemode}
                                         numbers={numbers}
                                         setNumbers={handleNumbersChange}
+                                        onStartGame={handleStartGame}
                                     />
                                 ) : tabs === 'Questions' ? (
                                     <Questions

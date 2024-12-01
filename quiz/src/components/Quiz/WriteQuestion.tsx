@@ -1,29 +1,48 @@
-import React from 'react';
-import Button from '../Button/Button';
+import React, { useState, useEffect } from 'react';
+import SubmitButton from '../Button/SubmitButton';
 
-const WriteQuestion: React.FC = () => {
-    const [Question] = React.useState('What is the capital of France ?');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [Answer, setAnswer] = React.useState('');
+interface Props {
+    question: string;
+    correctAnswer: string;
+    onAnswerSubmit: (isCorrect: boolean) => void;
+    timer: number;
+}
+
+const WriteQuestion: React.FC<Props> = ({ question, correctAnswer, onAnswerSubmit, timer }) => {
+    const [userAnswer, setUserAnswer] = useState<string>('');
+    const [isAnswered, setIsAnswered] = useState<boolean>(false);
+
+    useEffect(() => {
+        setUserAnswer('');
+        setIsAnswered(false);
+    }, [question]);
+
+    const handleSubmitAnswer = () => {
+        setIsAnswered(true);
+        const isCorrect = userAnswer.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
+        onAnswerSubmit(isCorrect);
+    };
 
     return (
         <div className='flex flex-col justify-center items-center'>
-            <p className='text-3xl mb-4'>{Question}</p>
-            <div className='w-full'>
-                <span
-                    className='w-full flex flex-col justify-center items-center'
-                >
-                    <input
-                        type="text"
-                        className='bg-purple-500 focus:bg-purple-400 border-purple-700 focus:border-purple-500 font-bold py-2 px-4 border-b-4 rounded my-20'
-                        placeholder='Your answer'
-                    />
-                </span>
-            </div>
-            <Button
-                label="Check"
-                color="bg-blue-500 hover:bg-blue-400 border-blue-700 hover:border-blue-500 mt-8"
+            <p className='text-3xl mb-4'>{question}</p>
+            <input
+                type="text"
+                className='bg-purple-500 focus:bg-purple-400 border-purple-700 focus:border-purple-500 font-bold py-2 px-4 border-b-4 rounded my-20'
+                placeholder="Your answer"
+                value={userAnswer}
+                onChange={(e) => !isAnswered && setUserAnswer(e.target.value)}
             />
+            <div className="mt-8">
+                <p>Time Remaining: {timer}s</p>
+                {!isAnswered && (
+                    <SubmitButton
+                        label="Submit"
+                        color="bg-blue-500 hover:bg-blue-400 border-blue-700 hover:border-blue-500 mt-8"
+                        onClick={handleSubmitAnswer}
+                    />
+                )}
+            </div>
         </div>
     );
 };

@@ -1,109 +1,56 @@
 import React from 'react';
-import Chrono from '../../assets/images/chrono.svg';
-import Gamemode from '../../assets/images/gamemode.svg';
-import Numbers from '../../assets/images/numbers.svg';
-import Button from '../Button/Button';
-import { Link } from 'react-router-dom';
+import SubmitButton from '../Button/SubmitButton';
 
-interface SettingsProps {
-    chrono: string;
-    setChrono: (value: string) => void;
+interface Props {
+    chrono: number;
+    setChrono: (chrono: number) => void;
     gamemode: string;
-    setGamemode: (value: string) => void;
+    setGamemode: (gamemode: string) => void;
     numbers: number;
-    setNumbers: (value: number) => void;
+    setNumbers: (numbers: number) => void;
+    onStartGame: () => void;
 }
 
-const Settings: React.FC<SettingsProps> = ({ chrono, setChrono, gamemode, setGamemode, numbers, setNumbers }) => {
+const Settings: React.FC<Props> = ({ chrono, setChrono, gamemode, setGamemode, numbers, setNumbers, onStartGame }) => {
     return (
-        <div>
-            <div>
-                <div className='flex items-center m-4'>
-                    <div className='flex w-1/2 mx-4'>
-                        <img src={Chrono} alt="chrono" className='mr-2' />
-                        <div>
-                            <p>CHRONO</p>
-                            <p className='font-normal'>Edit the timer to answer to a question</p>
-                        </div>
-                    </div>
-                    <div className='w-1/2'>
-                        <select
-                            title="chrono"
-                            name="chrono"
-                            id="chrono"
-                            className='block w-full p-2 text-sm text-white border-none rounded-lg bg-black/50 w-full'
-                            value={chrono}
-                            onChange={(e) => setChrono(e.target.value)}
-                        >
-                            <option value="15s">15 seconds</option>
-                            <option value="30s">30 seconds</option>
-                            <option value="45s">45 seconds</option>
-                            <option value="1min">1 minute</option>
-                            <option value="1min30">1 minute 30</option>
-                            <option value="2min">2 minutes</option>
-                        </select>
-                    </div>
-                </div>
-                <div className='flex items-center m-4'>
-                    <div className='flex w-1/2 mx-4'>
-                        <img src={Gamemode} alt="gamemode" className='mr-2' />
-                        <div>
-                            <p>GAMEMODE</p>
-                            <p className='font-normal'>Choose the gamemode to create your questions or take the public questions</p>
-                        </div>
-                    </div>
-                    <div className='w-1/2'>
-                        <select
-                            title="gamemode"
-                            name="gamemode"
-                            id="gamemode"
-                            className='block w-full p-2 text-sm text-white border-none rounded-lg bg-black/50 w-full'
-                            value={gamemode}
-                            onChange={(e) => setGamemode(e.target.value)}
-                        >
-                            <option value="public">Public</option>
-                            <option value="private">Private</option>
-                        </select>
-                    </div>
-                </div>
-                <div className='flex items-center m-4'>
-                    <div className='flex w-1/2 mx-4'>
-                        <img src={Numbers} alt="numbers" className='mr-2' />
-                        <div>
-                            <p>NUMBERS</p>
-                            <p className='font-normal'>Choose the numbers of questions</p>
-                        </div>
-                    </div>
-                    <div className='w-1/2'>
-                        <select
-                            title="numbers"
-                            name="numbers"
-                            id="numbers"
-                            className='block w-full p-2 text-sm text-white border-none rounded-lg bg-black/50 w-full'
-                            value={numbers}
-                            onChange={(e) => setNumbers(Number(e.target.value))}
-                        >
-                            <option value="1">1</option>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div className='flex justify-around items-center w-full mt-8'>
-                <Button
-                    label="SHARE LINK"
-                    color="bg-blue-500 hover:bg-blue-400 border-blue-700 hover:border-blue-500"
+        <div className="flex flex-col items-center">
+            <h2 className="text-xl">Settings</h2>
+            <div className="mt-4">
+                <label>Time per Question:</label>
+                <input
+                    type="number"
+                    value={chrono}
+                    onChange={(e) => setChrono(Number(e.target.value))}
+                    className="p-2 border border-gray-400 rounded"
                 />
-                <Link to="/game">                
-                    <Button
-                        label="START"
-                        color="bg-green-500 hover:bg-green-400 border-green-700 hover:border-green-500"
-                    />
-                </Link>
+            </div>
+            <div className="mt-4">
+                <label>Game Mode:</label>
+                <select
+                    aria-label="Game Mode"
+                    value={gamemode}
+                    onChange={(e) => setGamemode(e.target.value)}
+                    className="p-2 border border-gray-400 rounded"
+                >
+                    <option value="private">Private</option>
+                    <option value="public">Public</option>
+                </select>
+            </div>
+            <div className="mt-4">
+                <label>Number of Questions:</label>
+                <input
+                    type="number"
+                    value={numbers}
+                    onChange={(e) => setNumbers(Number(e.target.value))}
+                    className="p-2 border border-gray-400 rounded"
+                />
+            </div>
+            <div className="mt-6">
+                <SubmitButton
+                    label="Start Game"
+                    color="bg-green-500 hover:bg-green-400 border-green-700 hover:border-green-500"
+                    onClick={onStartGame}
+                />
             </div>
         </div>
     );
