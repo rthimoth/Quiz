@@ -100,7 +100,7 @@ const Game: React.FC = () => {
                     <p>{isCorrect ? 'Correct!' : 'Incorrect!'}</p>
                 </div>
             )}
-            <div className="flex justify-end w-full p-16">
+            <div className="flex justify-end w-full pt-16 pr-16">
                 <p>{currentQuestionIndex + 1}/{numbers}</p>
             </div>
         </div>

@@ -74,9 +74,9 @@ const Lobby: React.FC = () => {
                 .then((response) => {
                     const apiQuestions = response.data.data;
     
-                    const transformedQuestions = apiQuestions.map((apiQuestion: { type: string; question: string; answer: string; choices?: string[] }) => ({
+                    const transformedQuestions = apiQuestions.map((apiQuestion: { type: string; question: string; answer: string; choices?: string[]; theme: string }) => ({
                         type: apiQuestion.type, 
-                        question: apiQuestion.question,
+                        question: apiQuestion.question + " ( " + apiQuestion.theme + " )",
                         answer: apiQuestion.answer,
                         choices: apiQuestion.choices,
                     }));

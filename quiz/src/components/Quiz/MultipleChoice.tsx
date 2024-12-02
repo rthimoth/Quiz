@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SubmitButton from '../Button/SubmitButton';
+import verifAnswer from '../Utils/VerifAnswer';
 
 interface Props {
     question: string;
@@ -17,16 +18,16 @@ const MultipleChoice: React.FC<Props> = ({ question, answers, correctAnswer, onA
         setIsAnswered(false);
     }, [question]);
 
-    const handleSubmitAnswer = () => {
+    const handleSubmitAnswer = async () => {
         setIsAnswered(true);
-        const isCorrect = selectedAnswer === correctAnswer;
+        const isCorrect = await verifAnswer(selectedAnswer, correctAnswer);
         onAnswerSubmit(isCorrect);
     };
 
     return (
         <div className='flex flex-col justify-center items-center'>
             <p className='text-3xl mb-4'>{question}</p>
-            <div className='w-full'>
+            <div className='w-full flex justify-center flex-col items-center'>
                 {answers.map((answer, index) => (
                     <SubmitButton
                         key={index}

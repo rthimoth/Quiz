@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SubmitButton from '../Button/SubmitButton';
+import verifAnswer from '../Utils/VerifAnswer';
 
 interface Props {
     question: string;
@@ -16,9 +17,9 @@ const WriteQuestion: React.FC<Props> = ({ question, correctAnswer, onAnswerSubmi
         setIsAnswered(false);
     }, [question]);
 
-    const handleSubmitAnswer = () => {
+    const handleSubmitAnswer = async () => {
         setIsAnswered(true);
-        const isCorrect = userAnswer.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
+        const isCorrect = await verifAnswer(userAnswer, correctAnswer);
         onAnswerSubmit(isCorrect);
     };
 
