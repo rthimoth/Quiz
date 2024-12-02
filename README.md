@@ -108,4 +108,4 @@ Voici la structure des fichiers du projet :
 [FATH Maël](https://github.com/maelft), [RANVIN Thimothee](https://github.com/rthimoth), [SINCK Erwan](https://github.com/erxide)
 
 
-``Vous pourrez trouver la version websocket dans la branch 'websocket'``
+``Vous pourrez trouver la version websocket dans la branch 'test'``
